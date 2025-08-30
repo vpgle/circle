@@ -31,11 +31,17 @@ class InteractiveCircleSystem {
         this.texts = {
             chinese: {
                 title: '填数字，曲线消失',
-                instructions: '找圆上与曲线的交点，点击右下角的数字使其填到右上方的方格中'
+                instructions: '找圆上与曲线的交点，点击右下角的数字使其填到右上方的方格中',
+                hints: '提示：编号按顺时针一次增大；点击曲线会显示编号',
+                gameOver: '恭喜完成！',
+                resetButton: '重新开始'
             },
             english: {
                 title: 'Fill Numbers, Curves Disappear',
-                instructions: 'Find intersection points of curves on the circle, click numbers in the bottom-right corner to fill them into the grid in the top-right corner'
+                instructions: 'Find intersection points of curves on the circle, click numbers in the bottom-right corner to fill them into the grid in the top-right corner',
+                hints: 'Hint: Numbers increase clockwise; Click curves to show numbers',
+                gameOver: 'Congratulations!',
+                resetButton: 'Restart Game'
             }
         };
         
@@ -57,6 +63,37 @@ class InteractiveCircleSystem {
         this.generateCurves();
         this.generateIntersections();
         this.setupLanguageToggle();
+        this.setupResetButton();
+        this.render();
+    }
+    
+    setupResetButton() {
+        const resetButton = document.getElementById('resetButton');
+        resetButton.addEventListener('click', () => this.resetGame());
+    }
+    
+    resetGame() {
+        // 隐藏游戏结束覆盖层
+        document.getElementById('gameOverOverlay').style.display = 'none';
+        
+        // 重置所有状态
+        this.curves = [];
+        this.intersections = [];
+        this.gridState = [];
+        this.upperGridState = [];
+        this.currentGroup = 0;
+        this.selectedCurve = null;
+        this.animationProgress = 0;
+        this.isAnimating = false;
+        
+        // 清空并重新创建网格
+        document.getElementById('numberedGrid').innerHTML = '';
+        document.getElementById('unnumberedGrid').innerHTML = '';
+        
+        // 重新初始化游戏
+        this.createGrids();
+        this.generateCurves();
+        this.generateIntersections();
         this.render();
     }
     
@@ -73,10 +110,34 @@ class InteractiveCircleSystem {
     updateTexts() {
         const titleElement = document.getElementById('gameTitle');
         const instructionsElement = document.getElementById('gameInstructions');
+        const hintsElement = document.getElementById('gameHints');
+        const gameOverTitleElement = document.getElementById('gameOverTitle');
+        const resetButtonElement = document.getElementById('resetButton');
         
         const currentTexts = this.texts[this.currentLanguage];
         titleElement.textContent = currentTexts.title;
         instructionsElement.textContent = currentTexts.instructions;
+        hintsElement.textContent = currentTexts.hints;
+        gameOverTitleElement.textContent = currentTexts.gameOver;
+        resetButtonElement.textContent = currentTexts.resetButton;
+    }
+    
+    checkGameOver() {
+        // 检查是否所有曲线都已被删除
+        const visibleCurves = this.curves.filter(curve => curve.visible !== false);
+        if (visibleCurves.length === 0) {
+            this.showGameOver();
+        }
+    }
+    
+    showGameOver() {
+        const overlay = document.getElementById('gameOverOverlay');
+        overlay.style.display = 'flex';
+        
+        // 更新游戏结束界面的文本
+        const currentTexts = this.texts[this.currentLanguage];
+        document.getElementById('gameOverTitle').textContent = currentTexts.gameOver;
+        document.getElementById('resetButton').textContent = currentTexts.resetButton;
     }
     
     createGrids() {
@@ -415,6 +476,9 @@ class InteractiveCircleSystem {
         
         // 重新渲染
         this.render();
+        
+        // 检查游戏是否结束
+        this.checkGameOver();
     }
     
     hideCurveByIndex(curveIndex) {

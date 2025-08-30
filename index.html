@@ -80,7 +80,7 @@
         }
         .game-title {
             position: absolute;
-            top: calc(50% - 30px);
+            top: calc(50% - 80px);
             left: 80%;
             transform: translateX(-50%);
             font-size: 24px;
@@ -93,25 +93,81 @@
         }
         .game-instructions {
             position: absolute;
-            top: calc(50% + 10px);
+            top: calc(50% - 30px);
             left: 80%;
             transform: translateX(-50%);
             font-size: 14px;
             color: #666;
             text-align: center;
-            max-width: 250px;
+            max-width: 300px;
             z-index: 1000;
             line-height: 1.4;
+        }
+        .game-hints {
+            position: absolute;
+            top: calc(50% + 50px);
+            left: 80%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+            max-width: 300px;
+            z-index: 1000;
+            line-height: 1.3;
+            font-style: italic;
+        }
+        .game-over-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        .game-over-content {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        .game-over-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .reset-button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .reset-button:hover {
+            background: #45a049;
         }
     </style>
 </head>
 <body>
-    <button class="language-toggle" id="languageToggle">中文/English</button>
+    <button class="language-toggle" id="languageToggle">English/中文</button>
     
     <div class="game-title" id="gameTitle">Fill Numbers, Curves Disappear</div>
     
     <div class="game-instructions" id="gameInstructions">
         Find intersection points of curves on the circle, click numbers in the bottom-right corner to fill them into the grid in the top-right corner
+    </div>
+    
+    <div class="game-hints" id="gameHints">
+        Hint: Numbers increase clockwise; Click curves to show numbers
     </div>
     
     <canvas id="canvas"></canvas>
@@ -122,6 +178,13 @@
     
     <div class="grid-container unnumbered-grid">
         <div id="unnumberedGrid" class="grid"></div>
+    </div>
+    
+    <div class="game-over-overlay" id="gameOverOverlay">
+        <div class="game-over-content">
+            <div class="game-over-title" id="gameOverTitle">恭喜完成！</div>
+            <button class="reset-button" id="resetButton">重新开始</button>
+        </div>
     </div>
 
     <script src="script.js"></script>

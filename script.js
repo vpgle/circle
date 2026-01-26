@@ -32,7 +32,7 @@ class InteractiveCircleSystem {
             chinese: {
                 title: '填数字，曲线消失',
                 instructions: '找圆上与曲线的交点，点击右下角的数字使其填到右上方的方格中',
-                hints: '提示：编号按顺时针一次增大；点击曲线会显示编号',
+                hints: '提示：编号按顺时针依次增大；点击曲线会显示编号',
                 gameOver: '恭喜完成！',
                 resetButton: '重新开始'
             },
